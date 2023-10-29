@@ -9,12 +9,16 @@ const LoginSignup = () => {
 const LoginForm = () => {
   return (
     <form>
-      <label>
-        Adres e-mail: <input id="email" type="email" />
-      </label>
-      <label>
-        Hasło: <input id="password" type="text" />
-      </label>
+      <p>
+        <label>
+          Adres e-mail: <input id="email" type="email" />
+        </label>
+      </p>
+      <p>
+        <label>
+          Hasło: <input id="password" type="text" />
+        </label>
+      </p>
       <button id="submit">Zaloguj</button>
     </form>
   );
