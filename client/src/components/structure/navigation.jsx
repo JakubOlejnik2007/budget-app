@@ -1,6 +1,7 @@
 import urls from "../../utils/urls";
 import Homepage from "../pages/homepage";
 import LoginSignup from "../pages/login-signup/login-signup";
+import UserPanel from "../pages/user-panel/user-panel";
 
 export const nav = [
   {
@@ -17,6 +18,14 @@ export const nav = [
     name: "Zaloguj bądź zarejestruj się",
     element: <LoginSignup />,
     isMenu: false,
+    isPrivate: false,
+  },
+  {
+    id: "3",
+    path: urls.client.userpanel,
+    name: "Panel użytkownika",
+    element: <UserPanel />,
+    isMenu: true,
     isPrivate: false,
   }
 ];
