@@ -1,4 +1,4 @@
-import { useState } from "react";
+/* eslint-disable react/prop-types */
 import { TextField } from "@mui/material";
 
 const FormInput = ({
@@ -10,9 +10,13 @@ const FormInput = ({
 }) => {
   return (
     <>
-      <TextField id={id} type={type} onChange={onChange} value={value} label={label}/>
+      <TextField value={value} id={id} type={type} onChange={onChange} label={label} sx={{
+        display: "block"
+      }
+      } />
     </>
   );
 };
+
 
 export default FormInput;
