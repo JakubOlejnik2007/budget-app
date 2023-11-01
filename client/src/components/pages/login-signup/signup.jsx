@@ -1,7 +1,7 @@
 import React from "react";
 import FormInput from "../../partials/form-input";
 
-const SignUpForm = () => {
+const SignupForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
   }
@@ -17,4 +17,4 @@ const SignUpForm = () => {
   )
 }
 
-export default SignUpForm;
+export default SignupForm;

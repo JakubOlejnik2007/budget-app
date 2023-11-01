@@ -1,10 +1,13 @@
-import React from "react";
+import React, {useState} from "react";
 import FormInput from "../../partials/form-input";
-
+import LoginForm from "./login";
+import SignUpForm from "./signup";
 const LoginSignup = () => {
-  const [toggle, setToglle] = useState(true);
+  const [toggle, setToggle] = useState(true);
 
-  return <></>;
+  return (<>
+    {toggle? <LoginForm /> : <SignUpForm />}
+  </>);
 };
 
 

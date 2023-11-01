@@ -10,9 +10,13 @@ const FormInput = ({
 }) => {
   return (
     <>
-      <TextField id={id} type={type} onChange={onChange} value={value} label={label}/>
+      <TextField value={value} id={id} type={type} onChange={onChange}  label={label} sx={{
+        display: "block"
+      }
+      } />
     </>
   );
 };
+
 
 export default FormInput;
