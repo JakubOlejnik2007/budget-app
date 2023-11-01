@@ -15,3 +15,4 @@ export const loginInputs = [
         value: "Zaloguj się"
     }
 ]
+
