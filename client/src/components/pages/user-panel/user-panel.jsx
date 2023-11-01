@@ -1,6 +1,6 @@
 import React from "react";
-import { Weekly, Yearly, WeeklyCategories } from "./charts";
 import { Typography } from "@mui/material";
+import DropdownMenu from "../../structure/dropdown-menu";
 
 const UserPanel = () => {
     return (
@@ -13,25 +13,7 @@ const UserPanel = () => {
                 }}>
                 Panel użytkownika
             </Typography>
-            <Typography
-                variant="h2"
-                sx={{
-                    fontSize: "2rem",
-                    textAlign: "left",
-                }}>
-                    Podsumowanie tygodnia
-            </Typography>
-            <Weekly />
-            <WeeklyCategories />
-            <Typography
-                variant="h2"
-                sx={{
-                    fontSize: "2rem",
-                    textAlign: "left",
-                }}>
-                    Podsumowanie roku
-            </Typography>
-            <Yearly />
+            <DropdownMenu />
         </>
     );
 }

@@ -3,7 +3,7 @@ const urls = {
         homepage: "/",
         about: "/o-aplikacji",
         login: "/logowanie",
-        userpanel: "/panel-użytkownika",    
+        userpanel: "/panel-uzytkownika",    
     },
     backend: {
 
