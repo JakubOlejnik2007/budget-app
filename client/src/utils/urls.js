@@ -5,7 +5,10 @@ const urls = {
         login: "/logowanie"
     },
     backend: {
-
+        auth: {
+            register: "/register",
+            login: "/login"
+        }
     }
 }
 
