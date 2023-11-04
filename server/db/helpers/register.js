@@ -1,5 +1,4 @@
 const models = require("../models");
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 require("../db_config");
@@ -16,6 +15,7 @@ const register = async (req, res) => {
             password: await bcrypt.hash(req.body.password, 10),
         };
 
+        console.log(await models.User.findOne({ email: user.email }), await checkIfEmailAlreadyExists(user.email));
         if (await checkIfEmailAlreadyExists(user.email)) {
             res.sendStatus(409);
             return;
@@ -31,15 +31,18 @@ const register = async (req, res) => {
 };
 
 const checkIfEmailAlreadyExists = async (emailToCheck) => {
-    try{
-        const response = await models.User.findOne({ email: emailToCheck })
+    try {
+        const response = await models.User.findOne({ email: emailToCheck });
+
+        console.log(response);
+
         if (response) {
             return true;
         } else {
             return false;
         }
     } catch {
-        throw new Error("Email already exists"); 
+        throw new Error("Email already exists");
     }
 };
 
