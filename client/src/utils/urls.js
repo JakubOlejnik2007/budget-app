@@ -2,7 +2,8 @@ const urls = {
     client: {
         homepage: "/",
         about: "/o-aplikacji",
-        login: "/logowanie"
+        login: "/logowanie",
+        userpanel: "/panel-uzytkownika",    
     },
     backend: {
         auth: {
