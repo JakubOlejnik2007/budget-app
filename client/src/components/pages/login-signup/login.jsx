@@ -4,8 +4,8 @@ import { Box } from "@mui/material";
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { AuthData } from "../../../auth/AuthWrapper"
-import { callError } from "../../../utils/toast-notifications/toast"
+import { AuthData } from "../../../auth/AuthWrapper";
+import { callError } from "../../../utils/toast-notifications/toast";
 
 const LoginForm = () => {
 

@@ -29,12 +29,12 @@ export const signUpInputs = [
     },
     {
         id: "password",
-        type: "text",
+        type: "password",
         label: "Hasło"
     },
     {
         id: "confirmPassword",
-        type: "text",
+        type: "password",
         label: "Potwierdź hasło"
     }
 ]
