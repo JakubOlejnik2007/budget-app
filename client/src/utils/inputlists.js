@@ -8,22 +8,17 @@ export const loginInputs = [
         id: "password",
         type: "password",
         label: "Hasło"
-    },
-    {
-        id: "submit",
-        type: "submit",
-        value: "Zaloguj się"
     }
 ]
 
 export const signUpInputs = [
     {
-        id: "imie",
+        id: "firstName",
         type: "text",
         label: "Imię"
     },
     {
-        id: "nazwisko",
+        id: "lastName",
         type: "text",
         label: "Nazwisko"
     },
@@ -41,11 +36,6 @@ export const signUpInputs = [
         id: "confirmPassword",
         type: "text",
         label: "Potwierdź hasło"
-    },
-    {
-        id: "submit",
-        type: "submit",
-        value: "Zarejestruj się"
     }
 ]
 

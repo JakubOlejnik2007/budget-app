@@ -1,6 +1,7 @@
 import urls from "../../utils/urls";
 import Homepage from "../pages/homepage";
-import LoginSignup from "../pages/login-signup/login-signup";
+import LoginForm from "../pages/login-signup/login";
+import SignupForm from "../pages/login-signup/signup";
 import UserPanel from "../pages/user-panel/user-panel";
 
 export const nav = [
@@ -15,13 +16,21 @@ export const nav = [
   {
     id: "2",
     path: urls.client.login,
-    name: "Zaloguj bądź zarejestruj się",
-    element: <LoginSignup />,
+    name: "Zaloguj się",
+    element: <LoginForm />,
     isMenu: false,
     isPrivate: false,
   },
   {
     id: "3",
+    path: urls.client.register,
+    name: "Zarejestruj się",
+    element: <SignupForm />,
+    isMenu: false,
+    isPrivate: false,
+  },
+  {
+    id: "4",
     path: urls.client.userpanel,
     name: "Panel użytkownika",
     element: <UserPanel />,

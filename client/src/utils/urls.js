@@ -3,7 +3,8 @@ const urls = {
         homepage: "/",
         about: "/o-aplikacji",
         login: "/logowanie",
-        userpanel: "/panel-uzytkownika",    
+        register: "/rejestracja",
+        userpanel: "/panel-uzytkownika",
     },
     backend: {
         auth: {

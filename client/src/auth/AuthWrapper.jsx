@@ -4,17 +4,19 @@ import {
   RenderRoutes,
 } from "../components/structure/render-navigation";
 import { useNavigate } from "react-router-dom/dist";
-import config from "../utils/config";
-import urls from "../utils/urls";
-import axios from "axios";
-import { callLoadingWithPromise } from "../utils/toast-notifications/toast";
-
-import { Container, Typography } from "@mui/material";
-
+import { loginRequest } from "../fetchers/apiRequestFunctions"
+import { Container } from "@mui/material";
+import { callError, callSuccess } from "../utils/toast-notifications/toast"
 const AuthContext = createContext({
-  user: { id: "", name: "", email: "", AuthToken: "" },
-  login: () => {},
-  logout: () => {},
+  user: {
+    id: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    AuthToken: "",
+  },
+  login: () => { },
+  logout: () => { },
 });
 
 export const AuthData = () => useContext(AuthContext);
@@ -22,7 +24,8 @@ export const AuthData = () => useContext(AuthContext);
 export const AuthWrapper = () => {
   const [user, setUser] = useState({
     id: "",
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     AuthToken: "",
   });
@@ -36,49 +39,61 @@ export const AuthWrapper = () => {
     }
   }, []);
 
+  const setUserData = (user) => {
+    setUser({
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      AuthToken: user.AuthToken,
+    });
+    sessionStorage.setItem(
+      "user",
+      JSON.stringify({
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        AuthToken: user.AuthToken,
+      })
+    );
+  }
+
   const login = async (email, password) => {
     try {
-      const loadingPromise = callLoadingWithPromise(
-        "Trwa logowanie...",
-        axios.post(`${config.backend}${urls.backend.auth.login}`, {
-          email: email,
-          password: password,
-        }),
-        "Zalogowano pomyślnie!",
-        "Błąd logowania. Sprawdź poprawność danych."
-      );
-
-      const response = await loadingPromise;
+      const response = await loginRequest(email, password);
+      console.log(response.response)
 
       if (response && response.status === 200) {
-        setUser({
-          id: response.data.id,
-          name: response.data.name,
-          email: response.data.email,
-          AuthToken: response.data.AuthToken,
-        });
-        sessionStorage.setItem(
-          "user",
-          JSON.stringify({
-            id: response.data.id,
-            name: response.data.name,
-            email: response.data.email,
-            AuthToken: response.data.AuthToken,
-          })
-        );
+        setUserData(response.data)
         navigate("/");
-        return true;
+        return;
       }
 
-      return false;
-    } catch {
-      return false;
+
+
+    } catch (error) {
+      if (error.response)
+        switch (error.response.status) {
+          case 422: callError("Nie dostarczono wystarczająco danych do przetworzenia zapytania!"); break;
+          case 401: callError("Błędne dane logowania: niepoprawny email lub hasło!"); break;
+        }
+      callError("Błąd podczas wykonywania zapytania!")
     }
   };
 
+
+
+
   const logout = async () => {
     sessionStorage.removeItem("user");
-    setUser({ id: "", name: "", email: "", AuthToken: "" });
+    setUser({
+      id: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      AuthToken: "",
+    });
     navigate("/");
   };
 
