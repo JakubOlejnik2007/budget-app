@@ -12,7 +12,8 @@ const urls = {
             register: "/register",
             login: "/login"
         },
-        budget: "/budgets"
+        budget: "/budgets",
+        entriesWeekly: "/entries-weekly"
     }
 }
 

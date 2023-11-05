@@ -11,10 +11,8 @@ import Select from "@mui/material/Select";
 
 const DropdownMenu = () => {
 
-
 	const [choosenOption, setChoosenOption] = useState(null);
 	const { user } = AuthData();
-
 	const getBudgetsQuery = useQuery("budgetslist", () => getUserBudgetsList(user.id, user.AuthToken), {
 		staleTime: 60000,
 	});
@@ -56,6 +54,7 @@ const DropdownMenu = () => {
 
 	const onChange = (e) => {
 		setChoosenOption(e.target.value)
+
 	}
 
 	return (
