@@ -1,11 +1,12 @@
 import FormInput from "../../partials/form-input";
 import { loginInputs } from "../../../utils/inputlists";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { AuthData } from "../../../auth/AuthWrapper";
 import { callError } from "../../../utils/toast-notifications/toast";
+import { HolidayVillage, Spa } from "@mui/icons-material";
 
 const LoginForm = () => {
 
@@ -38,19 +39,36 @@ const LoginForm = () => {
 
   return (
     <>
+      <Typography variant="h1" sx={{
+        fontSize: "2rem",
+        textAlign: "center",
+        padding: "1rem 0",
+      }}>Logowanie</Typography>
+
       <Box component="form" onSubmit={handleSubmit} sx={{
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
       }}>
         {
           loginInputs.map((item, index) => <FormInput key={index} value={loginFormValues[item.id]} {...item} onChange={onChange} />)
         }
         <Button type="submit" sx={{
-
+          color: "#ffffff",
+          backgroundColor: "#2884ec",
+          margin: "auto",
+          padding: "10px 20px",
+          "&:hover":{
+            backgroundColor: "#2aa4ec",
+            color: "#000",
+          }
         }}>Zaloguj się</Button>
       </Box>
 
-      <Button onClick={() => {
+      <Button sx={{
+        margin: "auto",
+        marginTop: "6rem",
+        display: "block",
+      }} onClick={() => {
         navigate("/rejestracja")
       }}>Przejdź do rejestracji!</Button>
     </>
