@@ -25,6 +25,7 @@ const Entry = mongoose.model(
         value: Number,
         who: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         date: { type: Date, default: Date.now },
+        budget: { type: mongoose.Schema.Types.ObjectId, ref: "Budget" }
     })
 );
 
@@ -40,10 +41,10 @@ const Request = mongoose.model(
 const Budget = mongoose.model(
     "Budget",
     new mongoose.Schema({
+        name: String,
         owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         created: { type: Date, default: Date.now },
         members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-        entries: [{ type: mongoose.Schema.Types.ObjectId, ref: "Entry" }],
     })
 );
 

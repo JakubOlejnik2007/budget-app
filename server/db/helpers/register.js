@@ -1,8 +1,6 @@
 const models = require("../models");
 const bcrypt = require("bcrypt");
 
-require("../db_config");
-
 const register = async (req, res) => {
     try {
         if ((!req.body.firstName, !req.body.lastName, !req.body.email, !req.body.password))
