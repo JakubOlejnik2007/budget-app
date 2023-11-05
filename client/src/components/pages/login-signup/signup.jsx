@@ -65,7 +65,6 @@ const SignupForm = () => {
         textAlign: "center",
         padding: "1rem 0",
       }}>Rejestracja</Typography>
-
       <Box component="form" onSubmit={handleSubmit} sx={{
         display: "flex",
         flexDirection: "column"
