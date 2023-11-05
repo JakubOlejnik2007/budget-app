@@ -1,10 +1,12 @@
 import React from "react";
 import { Weekly, Yearly, MonthlyCategories } from "./charts";
-import { Typography, Button, Container, Grid } from "@mui/material";
+import { Typography, Button, Container } from "@mui/material";
+import TransactionList from "./transaction-list";
 
 const BudgetSummary = () => {
     return (
         <>
+        <TransactionList />
             <Container sx={{
                 display: "flex",
                 justifyContent: "space-between",
