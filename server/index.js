@@ -10,7 +10,7 @@ const register = require("./db/helpers/register");
 const login = require("./db/helpers/login");
 
 const { getBudgetsList, createBudget, deleteBudget } = require("./db/helpers/manage-budget");
-
+const { addEntry, getEntry } = require("./db/helpers/entries");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -25,6 +25,9 @@ app.post("/login", login);
 app.get("/budgets", getBudgetsList);
 app.post("/budgets", createBudget);
 app.delete("/budgets", deleteBudget);
+
+app.post("/entries", addEntry);
+app.get("/entries", getEntry);
 
 app.listen(config.express.port, () => {
     console.log(`Server running on port ${config.express.port}`);

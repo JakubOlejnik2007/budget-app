@@ -14,13 +14,14 @@ const Category = mongoose.model(
     "Category",
     new mongoose.Schema({
         name: String,
+        isIncome: Boolean
     })
 );
 
 const Entry = mongoose.model(
     "Entry",
     new mongoose.Schema({
-        isIncome: Boolean,
+        description: String,
         category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
         value: Number,
         who: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
