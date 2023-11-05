@@ -10,7 +10,7 @@ const FormInput = ({
 }) => {
   return (
     <>
-      <TextField value={value} id={id} name={id} type={type} onChange={onChange} label={label} required={false} sx={{
+      <TextField value={value} id={id} name={id} type={type} onChange={onChange} label={label} required={true} sx={{
         display: "block",
         margin: "15px auto"
       }

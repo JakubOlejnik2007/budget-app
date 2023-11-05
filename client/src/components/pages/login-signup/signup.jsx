@@ -1,6 +1,6 @@
 import FormInput from "../../partials/form-input";
 import { signUpInputs } from "../../../utils/inputlists";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -37,15 +37,15 @@ const SignupForm = () => {
       return;
     }
 
-    if(signupFormValues.password !== signupFormValues.confirmPassword) {
+    if (signupFormValues.password !== signupFormValues.confirmPassword) {
       callError("Hasła nie są takie same!");
       return;
     }
 
     try {
-      console.log({...signupFormValues})
-      const response = await registerRequest({...signupFormValues});
-      if(response.status === 200) callSuccess("Pomyślnie zarejestrowano!")
+      console.log({ ...signupFormValues })
+      const response = await registerRequest({ ...signupFormValues });
+      if (response.status === 200) callSuccess("Pomyślnie zarejestrowano!")
       navigate("/logowanie")
     } catch (error) {
       console.log(error)
@@ -60,6 +60,12 @@ const SignupForm = () => {
 
   return (
     <>
+      <Typography variant="h1" sx={{
+        fontSize: "2rem",
+        textAlign: "center",
+        padding: "1rem 0",
+      }}>Rejestracja</Typography>
+
       <Box component="form" onSubmit={handleSubmit} sx={{
         display: "flex",
         flexDirection: "column"
@@ -68,10 +74,21 @@ const SignupForm = () => {
           signUpInputs.map((item, index) => <FormInput key={index} value={signupFormValues[item.id]} {...item} onChange={onChange} />)
         }
         <Button type="submit" sx={{
-
-        }}>Zaloguj się</Button>
+          color: "#ffffff",
+          backgroundColor: "#2884ec",
+          margin: "auto",
+          padding: "10px 20px",
+          "&:hover": {
+            backgroundColor: "#2aa4ec",
+            color: "#000",
+          }
+        }}>Zarejestruj się</Button>
       </Box>
-      <Button onClick={() => {
+      <Button sx={{
+        margin: "auto",
+        marginTop: "6rem",
+        display: "block",
+      }} onClick={() => {
         navigate("/logowanie")
       }}>Przejdź do logowania!</Button>
     </>
