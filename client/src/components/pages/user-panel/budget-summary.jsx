@@ -1,5 +1,5 @@
 import React from "react";
-import { Weekly, Yearly, WeeklyCategories } from "./charts";
+import { Weekly, Yearly, MonthlyCategories } from "./charts";
 import { Typography } from "@mui/material";
 
 const BudgetSummary = () => {
@@ -13,7 +13,7 @@ const BudgetSummary = () => {
             Podsumowanie tygodnia
         </Typography>
         <Weekly />
-        <WeeklyCategories />
+        <MonthlyCategories />
         <Typography
             variant="h2"
             sx={{
