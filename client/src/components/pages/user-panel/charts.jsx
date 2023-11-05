@@ -17,7 +17,7 @@ export const Weekly = () => {
     );
 }
 
-export const WeeklyCategories = () => {
+export const MonthlyCategories = () => {
     return (
         <ReactFrappeChart
             type="donut"
