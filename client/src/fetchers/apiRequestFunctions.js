@@ -12,3 +12,6 @@ export const registerRequest = async ({email, password, firstName, lastName}) =>
         firstName,
         lastName,
     });
+
+export const getUserBudgetsList = async (id, AuthToken) => 
+    await createApiRequest("GET", `${config.backend}${urls.backend.budget}?memberid=${id}`, {}, AuthToken)
