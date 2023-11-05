@@ -40,7 +40,7 @@ const entries = [
     }
 ];
 
-function EntriesList() {
+const EntriesList = () => {
     return (
         <List>
             {entries.map((entry) => (

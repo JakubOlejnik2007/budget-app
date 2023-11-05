@@ -52,7 +52,6 @@ const RequestForm = () => {
                 <h1>Ładowanie...</h1>
             </>
         );
-    console.log(getBudgetsQuery.data.data);
     return (
         <>
             <Typography
@@ -96,18 +95,18 @@ const RequestForm = () => {
                     </Select>
                 </FormControl>
                 <Button type="submit" sx={{
-                        margin: "auto",
-                        marginTop: "2rem",
-                        display: "block",
-                        backgroundColor: "#2884ec",
-                        color: "#fff",
-                        padding: "10px 20px",
-                        "&:hover": {
-                            backgroundColor: "#2aa4ec",
-                            color: "#000",
-                          }
-                    }}
-                    onclick={() => {}}>Zaproś</Button>
+                    margin: "auto",
+                    marginTop: "2rem",
+                    display: "block",
+                    backgroundColor: "#2884ec",
+                    color: "#fff",
+                    padding: "10px 20px",
+                    "&:hover": {
+                        backgroundColor: "#2aa4ec",
+                        color: "#000",
+                    }
+                }}
+                    onclick={() => { }}>Zaproś</Button>
             </Box>
         </>
     );
