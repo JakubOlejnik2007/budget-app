@@ -13,9 +13,7 @@ const DropdownMenu = () => {
 
 	const [choosenOption, setChoosenOption] = useState(null);
 	const { user } = AuthData();
-	const getBudgetsQuery = useQuery("budgetslist", () => getUserBudgetsList(user.id, user.AuthToken), {
-		staleTime: 60000,
-	});
+	const getBudgetsQuery = useQuery("budgetslist", () => getUserBudgetsList(user.id, user.AuthToken));
 
 	useEffect(() => {
 		if (getBudgetsQuery.isError)

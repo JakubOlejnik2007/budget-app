@@ -144,7 +144,7 @@ const AddEntry = ({ budgetid }) => {
                         }}>
                         Dodaj wpis
                     </Typography>
-                    <FormInput id="entry-image" name="image" type="file" accept="image/*" onChange={handleFileChange} />
+                    <FormInput id="entry-image" name="image" type="file" accept="image/*" onChange={handleFileChange} required={false}/>
                     {budgetInputs.map((item, index) => (
                         <FormInput key={index} value={entryValues[item.id]} {...item} onChange={onChange} />
                     ))}
