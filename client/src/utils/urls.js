@@ -13,7 +13,9 @@ const urls = {
             login: "/login"
         },
         budget: "/budgets",
-        entriesWeekly: "/entries-weekly"
+        entries: "/entries",
+        entriesWeekly: "/entries-weekly",
+        categories: "/categories"
     }
 }
 

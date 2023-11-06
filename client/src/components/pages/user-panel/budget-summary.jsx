@@ -7,31 +7,31 @@ import ReactFrappeChart from "react-frappe-charts";
 import { getEntryWeekly } from "../../../fetchers/apiRequestFunctions";
 import { callError } from "../../../utils/toast-notifications/toast";
 import { AuthData } from "../../../auth/AuthWrapper";
-import { useQuery } from "react-query"
-
+import { useQuery } from "react-query";
+import AddEntry from "./addEntry";
 const BudgetSummary = ({ budgetid }) => {
     const [date, setDate] = useState(new Date());
     const { startOfWeek, endOfWeek } = getStartAndEndOfWeek(date);
-    const getEntriesWeeklyQuery = useQuery("entries", () => getEntryWeekly(budgetid, startOfWeek.toDateString(), endOfWeek.toDateString(), user.AuthToken), { enabled: false });
-
+    const getEntriesWeeklyQuery = useQuery(
+        "entries",
+        () => getEntryWeekly(budgetid, startOfWeek.toDateString(), endOfWeek.toDateString(), user.AuthToken),
+        { enabled: false }
+    );
 
     let prevStartDate;
     let prevEndDate;
 
     const [firstRender, setFirstRender] = useState(true);
 
-
     useEffect(() => {
         if (firstRender) {
-            console.log('Ten kod zostanie wykonany tylko raz po pierwszym renderowaniu');
+            console.log("Ten kod zostanie wykonany tylko raz po pierwszym renderowaniu");
             setFirstRender(false);
             getEntriesWeeklyQuery.refetch();
             prevStartDate = startOfWeek;
             prevEndDate = endOfWeek;
         }
     }, [firstRender]);
-
-
 
     const { user } = AuthData();
 
@@ -47,18 +47,14 @@ const BudgetSummary = ({ budgetid }) => {
         setDate(newDate);
     };
 
-
-
-
-
     useEffect(() => {
         if (prevEndDate !== endOfWeek && prevStartDate !== startOfWeek) {
             getEntriesWeeklyQuery.refetch();
             prevStartDate = startOfWeek;
             prevEndDate = endOfWeek;
-            console.log("Refetch")
+            console.log("Refetch");
         }
-        getEntriesWeeklyQuery.refetch()
+        getEntriesWeeklyQuery.refetch();
         if (getEntriesWeeklyQuery.isError)
             switch (getEntriesWeeklyQuery.error.response.status) {
                 case 401:
@@ -76,7 +72,6 @@ const BudgetSummary = ({ budgetid }) => {
                 default:
                     callError("Wystapił błąd!");
             }
-
     }, [date]);
 
     if (getEntriesWeeklyQuery.isError)
@@ -93,50 +88,100 @@ const BudgetSummary = ({ budgetid }) => {
             </>
         );
 
-    if (!getEntriesWeeklyQuery.data) return (<>
-        <h1>Ładowanie...</h1>
-    </>)
+    if (!getEntriesWeeklyQuery.data)
+        return (
+            <>
+                <h1>Ładowanie...</h1>
+            </>
+        );
 
     const entriesWeeklyRaw = getEntriesWeeklyQuery.data.data.raw;
     const entriesWeeklySorted = getEntriesWeeklyQuery.data.data.sorted;
-    console.log(entriesWeeklyRaw)
-    console.log(entriesWeeklySorted)
+    console.log(entriesWeeklyRaw);
+    console.log(entriesWeeklySorted);
 
-    const expenses = []
-    const incomes = []
+    const expenses = [];
+    const incomes = [];
 
+    const transformCategorySumsToChartData = (categorySums) => {
+        const labels = Object.keys(categorySums);
+        const values = Object.values(categorySums);
+
+        const chartData = {
+            labels: labels,
+            datasets: [
+                {
+                    values: values,
+                },
+            ],
+        };
+
+        return chartData;
+    };
+
+    const categoriesSum = {};
+
+    // Iteracja przez elementy i obliczenie sumy wartości w każdej kategorii
+    if (entriesWeeklyRaw)
+        entriesWeeklyRaw.forEach((item) => {
+            const categoryName = item.category.name;
+            const value = item.value;
+            if (item.category.isIncome) return;
+            if (categoriesSum[categoryName]) {
+                categoriesSum[categoryName] += value;
+            } else {
+                categoriesSum[categoryName] = value;
+            }
+        });
+
+    const chartData = transformCategorySumsToChartData(categoriesSum);
+
+    console.log(categoriesSum);
 
     for (let i = 1; i <= 7; i++) {
         let sum1 = 0;
         let sum2 = 0;
         if (entriesWeeklySorted[i % 7])
             entriesWeeklySorted[i % 7].forEach((entry) => {
-                console.log(entry.category.isIncome)
-                sum1 += (entry.category.isIncome ? 0 : entry.value);
-                sum2 += (entry.category.isIncome ? entry.value : 0);
-            })
-        expenses.push(sum1)
-        incomes.push(sum2)
-
+                console.log(entry.category.isIncome);
+                sum1 += entry.category.isIncome ? 0 : entry.value;
+                sum2 += entry.category.isIncome ? entry.value : 0;
+            });
+        expenses.push(sum1);
+        incomes.push(sum2);
     }
-
-
 
     return (
         <>
-            <TransactionList />
+            <AddEntry budgetid={budgetid} />
+            <TransactionList entries={entriesWeeklyRaw} />
             <Container
                 sx={{
                     display: "flex",
                     justifyContent: "space-between",
+                    "@media (max-width: 768px)" : {
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gridTemplateRows: "1fr 0.5fr",
+                        gridGap: "1rem",
+                    }
                 }}>
-                <Button variant="contained" color="warning" onClick={decrementWeek}>
+                <Button variant="contained" color="warning" onClick={decrementWeek} sx={{
+                    "@media (max-width: 768px)" : {
+                        gridColumn: "1 / 2",
+                        gridRow: 2,
+                    }
+                }}>
                     Poprzedni
                 </Button>
                 <Container
                     sx={{
                         textAlign: "center",
                         width: "fit-content",
+                        "@media (max-width: 768px)" : {
+                            gridColumn: "1 / 3",
+                            gridRow: 1,
+                        }
                     }}>
                     <Typography
                         variant="h2"
@@ -153,7 +198,12 @@ const BudgetSummary = ({ budgetid }) => {
                         {startOfWeek.toLocaleDateString()} | {endOfWeek.toLocaleDateString()}
                     </Typography>
                 </Container>
-                <Button variant="contained" color="warning" onClick={incrementWeek}>
+                <Button variant="contained" color="warning" onClick={incrementWeek} sx={{
+                    "@media (max-width: 768px)" : {
+                        gridColumn: "2 / 3",
+                        gridRow: 2,
+                    }
+                }}>
                     Następny
                 </Button>
             </Container>
@@ -183,10 +233,7 @@ const BudgetSummary = ({ budgetid }) => {
                 colors={["#21ba45", "#c00"]}
                 axisOptions={{ xAxisMode: "tick", yAxisMode: "tick", xIsSeries: 1 }}
                 height={250}
-                data={{
-                    labels: ["Kategorie 1", "Kategorie 2", "Kategorie 3", "Kategorie 4", "Kategorie 5", "Kategorie 6"],
-                    datasets: [{ values: [18, 40, 30, 35, 8, 52] }],
-                }}
+                data={chartData}
             />
             <Typography
                 variant="h2"

@@ -1,12 +1,18 @@
 export const budgetInputs = [
     {
-        id: "income",
-        type: "text",
-        label: "Dodaj przychód"
+        id: "entry-file",
+        type: "file",
+        label: "Załącz plik"
     },
     {
-        id: "expense",
+        id: "description",
         type: "text",
-        label: "Dodaj wydatek"
+        label: "Dodaj opis wpisu"
+    },
+    {
+        id: "value",
+        type: "number",
+        label: "Wpisz wartość"
     }
+ 
 ]

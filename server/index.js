@@ -11,12 +11,14 @@ const login = require("./db/helpers/login");
 
 const { getBudgetsList, createBudget, deleteBudget } = require("./db/helpers/manage-budget");
 const { addEntry, getEntry, getEntriesForWeek } = require("./db/helpers/entries");
+const { getCategories } = require("./db/helpers/categories");
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.get("/find", test);
-
+app.get("/categories", getCategories);
 app.post("/register", register);
 app.post("/login", login);
 

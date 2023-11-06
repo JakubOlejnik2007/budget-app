@@ -1,5 +1,6 @@
 const models = require("../models");
 
+
 const checkIfUserIsMemberOfBudget = async (userid, budgetid) => {
     const budget = await models.Budget.findById(budgetid);
 
@@ -54,13 +55,13 @@ const getEntriesForWeek = async (req, res) => {
     startDate.setDate(startDate.getDate() + 1);
 
     const endDate = new Date(req.query.endDate);
-    endDate.setDate(endDate.getDate() + 1);
+    endDate.setDate(endDate.getDate() + 2);
     const budgetId = req.query.budgetId;
     console.log(startDate, endDate);
     try {
         const entries = await models.Entry.find({
             budget: budgetId,
-            date: { $gte: startDate, $lte: endDate },
+            date: { $gte: startDate.toISOString().split('T')[0], $lte: endDate.toISOString().split('T')[0] },
         })
             .populate("who", "firstName lastName")
             .populate("category", "name isIncome")
@@ -84,9 +85,6 @@ const getEntriesForWeek = async (req, res) => {
     }
 };
 
-module.exports = {
-    getEntriesForWeek,
-};
 
 module.exports = {
     addEntry,

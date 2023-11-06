@@ -1,8 +1,8 @@
-import React from "react";
 import { Typography } from "@mui/material";
 import DropdownMenu from "../../structure/dropdown-menu";
 
 const UserPanel = () => {
+
     return (
         <>
             <Typography
@@ -16,6 +16,6 @@ const UserPanel = () => {
             <DropdownMenu />
         </>
     );
-}
+};
 
 export default UserPanel;

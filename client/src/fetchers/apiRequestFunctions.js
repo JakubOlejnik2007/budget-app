@@ -18,3 +18,9 @@ export const getUserBudgetsList = async (id, AuthToken) =>
 
 export const getEntryWeekly = async (budgetid, startDate, endDate, AuthToken) =>
     await createApiRequest("GET", `${config.backend}${urls.backend.entriesWeekly}?budgetId=${budgetid}&startDate=${startDate}&endDate=${endDate}`, {}, AuthToken)
+
+export const getCategories = async () => 
+    await createApiRequest("GET", `${config.backend}${urls.backend.categories}`)
+
+export const addEntry = async (AuthToken, userid, budgetid, categoryid, description, value) => 
+    await createApiRequest("POST", `${config.backend}${urls.backend.entries}`, {userid, budgetid, categoryid, description, value}, AuthToken);
