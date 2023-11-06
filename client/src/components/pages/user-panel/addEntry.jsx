@@ -5,24 +5,64 @@ import { Typography, FormControl, Select, InputLabel, MenuItem, Container } from
 import { getCategories, addEntry } from "../../../fetchers/apiRequestFunctions";
 import { budgetInputs } from "../../../utils/budgetInputs";
 import { useQuery } from "react-query";
-import { callError } from "../../../utils/toast-notifications/toast";
+import { callError, callSuccess } from "../../../utils/toast-notifications/toast";
 import FormInput from "../../partials/form-input"
-import {AuthData} from "../../../auth/AuthWrapper";
+import { AuthData } from "../../../auth/AuthWrapper";
+import axios from 'axios';
+import config from "../../../utils/config"
 
 const AddEntry = ({ budgetid }) => {
     const [show, setShow] = useState(true);
-    console.log(budgetInputs)
+    const [image, setImage] = useState(null);
     const [entryValues, setEntryValues] = useState({
         categoryid: "",
         description: "",
         value: ""
     })
 
+
+
+    const handleFileChange = async (e) => {
+        console.log("Change!")
+        const file = e.target.files[0];
+
+        if (file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await axios.post(`${config.backend}/image`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                setImage(response.data.name)
+                setEntryValues(prevState => {
+                    return {...prevState, value: parseInt(response.data.value)}
+                })
+                console.log('Plik został pomyślnie przesłany na serwer:', response.data);
+            } catch (error) {
+                console.error('Błąd podczas przesyłania pliku na serwer:', error);
+            }
+        }
+    };
+
+
     const onChange = (e) => {
         e.preventDefault();
         setEntryValues({
             ...entryValues,
             [e.target.name]: e.target.value
+        })
+    }
+
+    const handleReset = () => {
+        setEntryValues(prevState => {
+            return {
+                ...prevState,
+                description: "",
+                value: ""
+            }
         })
     }
 
@@ -34,14 +74,16 @@ const AddEntry = ({ budgetid }) => {
 
         try {
             await addEntry(user.AuthToken, user.id, budgetid, entryValues.categoryid, entryValues.description, entryValues.value);
+            handleReset()
+            callSuccess("Wpis został dodany!")
         } catch (error) {
-            console.log(error)
+            callError('Błąd podczas dodawania wpisu!')
         }
     }
 
     const getCategoriesQuery = useQuery("getCategories", getCategories, { staleTime: 60000 });
 
-    
+
 
 
     useEffect(() => {
@@ -102,6 +144,7 @@ const AddEntry = ({ budgetid }) => {
                         }}>
                         Dodaj wpis
                     </Typography>
+                    <FormInput id="entry-image" name="image" type="file" accept="image/*" onChange={handleFileChange} />
                     {budgetInputs.map((item, index) => (
                         <FormInput key={index} value={entryValues[item.id]} {...item} onChange={onChange} />
                     ))}
@@ -118,7 +161,7 @@ const AddEntry = ({ budgetid }) => {
                                 justifyContent: "center",
                             }}
                             labelId="label"
-                        label="Kategoria">
+                            label="Kategoria">
                             {getCategoriesQuery.data.data.map((item, index) => (
                                 <MenuItem key={index} value={item._id}>
                                     {item.name}

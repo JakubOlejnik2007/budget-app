@@ -9,6 +9,8 @@ import { callError } from "../../../utils/toast-notifications/toast";
 import { AuthData } from "../../../auth/AuthWrapper";
 import { useQuery } from "react-query";
 import AddEntry from "./addEntry";
+
+
 const BudgetSummary = ({ budgetid }) => {
     const [date, setDate] = useState(new Date());
     const { startOfWeek, endOfWeek } = getStartAndEndOfWeek(date);
