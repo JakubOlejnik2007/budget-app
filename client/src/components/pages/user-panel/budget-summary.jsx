@@ -9,9 +9,32 @@ import { callError } from "../../../utils/toast-notifications/toast";
 import { AuthData } from "../../../auth/AuthWrapper";
 import { useQuery } from "react-query"
 
-const BudgetSummary = ({budgetid}) => {
+const BudgetSummary = ({ budgetid }) => {
     const [date, setDate] = useState(new Date());
+    const { startOfWeek, endOfWeek } = getStartAndEndOfWeek(date);
+    const getEntriesWeeklyQuery = useQuery("entries", () => getEntryWeekly(budgetid, startOfWeek.toDateString(), endOfWeek.toDateString(), user.AuthToken), { enabled: false });
+
+
+    let prevStartDate;
+    let prevEndDate;
+
+    const [firstRender, setFirstRender] = useState(true);
+
+
+    useEffect(() => {
+        if (firstRender) {
+            console.log('Ten kod zostanie wykonany tylko raz po pierwszym renderowaniu');
+            setFirstRender(false);
+            getEntriesWeeklyQuery.refetch();
+            prevStartDate = startOfWeek;
+            prevEndDate = endOfWeek;
+        }
+    }, [firstRender]);
+
+
+
     const { user } = AuthData();
+
     const incrementWeek = () => {
         const newDate = new Date(date);
         newDate.setDate(date.getDate() + 7);
@@ -23,13 +46,19 @@ const BudgetSummary = ({budgetid}) => {
         newDate.setDate(date.getDate() - 7);
         setDate(newDate);
     };
-    const { startOfWeek, endOfWeek } = getStartAndEndOfWeek(date);
-    console.log(budgetid)
-    const getEntriesWeeklyQuery = useQuery("entries", () => getEntryWeekly(budgetid, startOfWeek.toDateString(), endOfWeek.toDateString(), user.AuthToken), {
-        staleTime: 60000,
-    });
+
+
+
+
 
     useEffect(() => {
+        if (prevEndDate !== endOfWeek && prevStartDate !== startOfWeek) {
+            getEntriesWeeklyQuery.refetch();
+            prevStartDate = startOfWeek;
+            prevEndDate = endOfWeek;
+            console.log("Refetch")
+        }
+        getEntriesWeeklyQuery.refetch()
         if (getEntriesWeeklyQuery.isError)
             switch (getEntriesWeeklyQuery.error.response.status) {
                 case 401:
@@ -47,7 +76,8 @@ const BudgetSummary = ({budgetid}) => {
                 default:
                     callError("Wystapił błąd!");
             }
-    }, [getEntriesWeeklyQuery]);
+
+    }, [date]);
 
     if (getEntriesWeeklyQuery.isError)
         return (
@@ -63,7 +93,9 @@ const BudgetSummary = ({budgetid}) => {
             </>
         );
 
-
+    if (!getEntriesWeeklyQuery.data) return (<>
+        <h1>Ładowanie...</h1>
+    </>)
 
     const entriesWeeklyRaw = getEntriesWeeklyQuery.data.data.raw;
     const entriesWeeklySorted = getEntriesWeeklyQuery.data.data.sorted;
@@ -74,17 +106,15 @@ const BudgetSummary = ({budgetid}) => {
     const incomes = []
 
 
-    for(let i = 1; i<=7;i++) {
+    for (let i = 1; i <= 7; i++) {
         let sum1 = 0;
         let sum2 = 0;
-        console.log(entriesWeeklySorted[i%7])
-        if(entriesWeeklySorted[i%7])
-        entriesWeeklySorted[i%7].forEach((entry) => {
-            console.log(entry.category.isIncome)
-            sum1+=(entry.category.isIncome ? 0 : entry.value);
-            sum2+=(entry.category.isIncome ? entry.value : 0);
-        })
-        console.log(sum1, sum2)
+        if (entriesWeeklySorted[i % 7])
+            entriesWeeklySorted[i % 7].forEach((entry) => {
+                console.log(entry.category.isIncome)
+                sum1 += (entry.category.isIncome ? 0 : entry.value);
+                sum2 += (entry.category.isIncome ? entry.value : 0);
+            })
         expenses.push(sum1)
         incomes.push(sum2)
 
@@ -92,9 +122,6 @@ const BudgetSummary = ({budgetid}) => {
 
 
 
-
-
-    console.log(startOfWeek.toDateString(), endOfWeek.toDateString());
     return (
         <>
             <TransactionList />
