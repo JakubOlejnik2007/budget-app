@@ -151,7 +151,7 @@ export const RenderMenu = () => {
   return (
     <AppBar position="static" color="warning">
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h6">
+        <Typography variant="h6" sx={{height: "50px"}}>
           <Link to="/">
             <img src={icon} alt="Logo" height={50} />
           </Link>
