@@ -1,4 +1,4 @@
-import icon from "../../assets/ikona_192.png";
+import icon from "../../assets/ikona.svg";
 import { Typography } from "@mui/material";
 import { Box } from "@mui/material";
 const Homepage = () => {
@@ -12,6 +12,7 @@ const Homepage = () => {
           display: "block",
           marginLeft: "auto",
           marginRight: "auto",
+          width: "192px"
         }}
       />
       <Typography

@@ -12,3 +12,18 @@ export const registerRequest = async ({email, password, firstName, lastName}) =>
         firstName,
         lastName,
     });
+
+export const getUserBudgetsList = async (id, AuthToken) => 
+    await createApiRequest("GET", `${config.backend}${urls.backend.budget}?memberid=${id}`, {}, AuthToken)
+
+export const getEntryWeekly = async (budgetid, startDate, endDate, AuthToken) =>
+    await createApiRequest("GET", `${config.backend}${urls.backend.entriesWeekly}?budgetId=${budgetid}&startDate=${startDate}&endDate=${endDate}`, {}, AuthToken)
+
+export const getCategories = async () => 
+    await createApiRequest("GET", `${config.backend}${urls.backend.categories}`)
+
+export const addEntry = async (AuthToken, userid, budgetid, categoryid, description, value) => 
+    await createApiRequest("POST", `${config.backend}${urls.backend.entries}`, {userid, budgetid, categoryid, description, value}, AuthToken);
+
+export const createBudget = async (AuthToken, ownerid, name) =>
+    await createApiRequest("POST", `${config.backend}${urls.backend.budget}`, {ownerid, name}, AuthToken)

@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import urls from "../../utils/urls";
-import icon from "../../assets/ikona_192.png";
+import icon from "../../assets/ikona.svg";
 
 export const RenderRoutes = () => {
   const flattenNav = (nav) => {

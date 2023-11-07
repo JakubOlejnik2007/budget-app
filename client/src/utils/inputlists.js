@@ -39,3 +39,10 @@ export const signUpInputs = [
     }
 ]
 
+export const requestInputs = [
+    {
+        id: "email",
+        type: "email",
+        label: "Adres email"
+    },
+]

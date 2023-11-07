@@ -3,6 +3,7 @@ import Homepage from "../pages/homepage";
 import LoginForm from "../pages/login-signup/login";
 import SignupForm from "../pages/login-signup/signup";
 import UserPanel from "../pages/user-panel/user-panel";
+import RequestForm from "../pages/requests/user-request";
 
 export const nav = [
   {
@@ -35,6 +36,14 @@ export const nav = [
     name: "Panel użytkownika",
     element: <UserPanel />,
     isMenu: true,
-    isPrivate: false,
+    isPrivate: true,
+  },
+  {
+    id:"5",
+    path: urls.client.requestForm,
+    name: "Zaproś do budżetu",
+    element: <RequestForm />,
+    isMenu: true,
+    isPrivate: true,
   }
 ];

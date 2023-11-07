@@ -5,8 +5,9 @@ const generateToken = require("../../auth/generateToken");
 const login = async (req, res) => {
     try {
         if (!req.body.email || !req.body.password) throw new Error("Provide more data!");
-
+        console.log(req.body.email, req.body.password)
         const user = await models.User.findOne({ email: req.body.email });
+
         if (!user) {
             res.sendStatus(401);
             return;

@@ -7,10 +7,11 @@ const FormInput = ({
   onChange,
   type = "text",
   id = Math.random(),
+  required=true
 }) => {
   return (
     <>
-      <TextField value={value} id={id} name={id} type={type} onChange={onChange} label={label} required={true} sx={{
+      <TextField required={required} value={value} id={id} name={id} type={type} onChange={onChange} label={label}  sx={{
         display: "block",
         margin: "15px auto"
       }

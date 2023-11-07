@@ -1,5 +1,6 @@
 const models = require("../models");
 
+
 const checkIfUserIsMemberOfBudget = async (userid, budgetid) => {
     const budget = await models.Budget.findById(budgetid);
 
@@ -41,15 +42,52 @@ const getEntry = async (req, res) => {
     try {
         if (!req.query.budgetid) throw new Error("Please provide an budgetid!");
         const entries = await models.Entry.find({ budget: req.query.budgetid })
-            .populate('category', 'name isIncome')
-            .populate('who', 'firstName lastName');
+            .populate("category", "name isIncome")
+            .populate("who", "firstName lastName");
         res.send(entries);
     } catch (error) {
         res.sendStatus(422);
     }
 };
 
+const getEntriesForWeek = async (req, res) => {
+    const startDate = new Date(req.query.startDate);
+    startDate.setDate(startDate.getDate() + 1);
+
+    const endDate = new Date(req.query.endDate);
+    endDate.setDate(endDate.getDate() + 2);
+    const budgetId = req.query.budgetId;
+    console.log(startDate, endDate);
+    try {
+        const entries = await models.Entry.find({
+            budget: budgetId,
+            date: { $gte: startDate.toISOString().split('T')[0], $lte: endDate.toISOString().split('T')[0] },
+        })
+            .populate("who", "firstName lastName")
+            .populate("category", "name isIncome")
+            .exec();
+
+        entries.sort((a, b) => a.date - b.date);
+        console.log(entries);
+        const sortedEntries = entries.reduce((result, entry) => {
+            const dayOfWeek = entry.date.getDay();
+            if (!result[dayOfWeek]) {
+                result[dayOfWeek] = [];
+            }
+            result[dayOfWeek].push(entry);
+            return result;
+        }, {});
+
+        res.json({ raw: entries, sorted: sortedEntries });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Wystąpił błąd serwera" });
+    }
+};
+
+
 module.exports = {
     addEntry,
     getEntry,
+    getEntriesForWeek,
 };

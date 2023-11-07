@@ -1,49 +1,90 @@
-import React, { useState } from 'react';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
+import { useState, useEffect } from 'react';
 import MenuItem from '@mui/material/MenuItem';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import BudgetSummary from "../pages/user-panel/budget-summary";
+import { getUserBudgetsList } from '../../fetchers/apiRequestFunctions';
+import { AuthData } from '../../auth/AuthWrapper';
+import { useQuery } from "react-query"
+import { callError } from "../../utils/toast-notifications/toast"
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 const DropdownMenu = () => {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [choosenOption, setChoosenOption] = useState(null);
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+	const [choosenOption, setChoosenOption] = useState(null);
+	const { user } = AuthData();
+	const getBudgetsQuery = useQuery("budgetslist", () => getUserBudgetsList(user.id, user.AuthToken));
 
-    const handleClose = (option) => {
-        setAnchorEl(null);
-        setChoosenOption(option);
-    };
+	useEffect(() => {
+		if (getBudgetsQuery.isError)
+			switch (getBudgetsQuery.error.response.status) {
+				case 401:
+					callError("Brak autoryzacji!");
+					break;
+				case 403:
+					callError("Brak dostępu do tej funkcji!");
+					break;
+				case 400:
+					callError("Podany adres email nie może dołączyć do budżetu!");
+					break;
+				case 422:
+					callError("Podano błędne dane!");
+					break;
+				default:
+					callError("Wystapił błąd!");
+			}
+	}, [getBudgetsQuery]);
 
-    return (
-        <div>
-          <Button
-            aria-controls="simple-menu"
-            aria-haspopup="true"
-            onClick={handleClick}
-            endIcon={anchorEl ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          >
-            {choosenOption ? choosenOption : 'Wybierz budżet'}
-          </Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={() => handleClose(null)}
-          >
-            <MenuItem onClick={() => handleClose('Budżet 1')}>Budżet 1</MenuItem>
-            <MenuItem onClick={() => handleClose('Budżet 2')}>Budżet 2</MenuItem>
-            <MenuItem onClick={() => handleClose('Budżet 3')}>Budżet 3</MenuItem>
-          </Menu>
-          {choosenOption === 'Budżet 1' && <BudgetSummary />}
-          {choosenOption === 'Budżet 2' && <BudgetSummary />}
-        </div>
-      );
-      
+	if (getBudgetsQuery.isError)
+		return (
+			<>
+				<h1>Błąd podczas generowania formularza!</h1>
+			</>
+		);
+
+	if (getBudgetsQuery.isLoading)
+		return (
+			<>
+				<h1>Ładowanie...</h1>
+			</>
+		);
+
+
+	const onChange = (e) => {
+		setChoosenOption(e.target.value)
+
+	}
+
+	return (
+		<div>
+			<FormControl
+				variant="standard"
+				sx={{
+					width: "30%",
+					margin: "auto",
+				}}>
+				<InputLabel id="demo-simple-select-standard-label">Budżet</InputLabel>
+				<Select
+					sx={{
+						display: "flex",
+						justifyContent: "center",
+					}}
+					labelId="demo-simple-select-standard-label"
+					id="demo-simple-select-standard"
+					label="Budżet"
+					onChange={onChange}
+				>
+					{getBudgetsQuery.data.data.map((item, index) => (
+						<MenuItem key={index} value={item._id}>
+							{item.name}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+			{choosenOption ? <BudgetSummary budgetid={choosenOption} /> : ""}
+		</div>
+	);
+
 }
 
 export default DropdownMenu;
