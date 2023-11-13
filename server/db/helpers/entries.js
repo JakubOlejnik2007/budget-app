@@ -23,6 +23,7 @@ const addEntry = async (req, res) => {
             who: req.body.userid,
             date: Date.now(),
             budget: req.body.budgetid,
+            image: req.body.image
         };
 
         if (!(await checkIfUserIsMemberOfBudget(req.body.userid, req.body.budgetid))) {

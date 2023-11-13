@@ -42,14 +42,20 @@ const RequestForm = () => {
     if (getBudgetsQuery.isError)
         return (
             <>
-                <h1>Błąd podczas generowania formularza!</h1>
+                            <Typography variant="h2" sx={{
+                fontSize: "1.5rem",
+                margin: "0.75rem 0"
+            }}>Błąd podczas generowania formularza!</Typography>
             </>
         );
 
     if (getBudgetsQuery.isLoading)
         return (
             <>
-                <h1>Ładowanie...</h1>
+                            <Typography variant="h2" sx={{
+                fontSize: "1.5rem",
+                margin: "0.75rem 0"
+            }}>Ładowanie...</Typography>
             </>
         );
     return (

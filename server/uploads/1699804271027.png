@@ -1,0 +1,16 @@
+ # Express config
+EXPRESS_PORT = 5172
+
+# MongoDB config
+MONGO_DB_IP = "127.0.0.1"
+MONGO_DB_PORT =  27017
+MONGO_DB_NAME = "budget-app"
+
+#MAILING CONFIG
+MAIL_SERVICE = "Gmail"
+MAIL_USER = "example@example.pl"
+MAIL_PASS = "wpxryyfdsfsdndlhfwdzcm"
+
+#AUTHENTICATION
+JWT_SECRET_KEY = "exmaplesecretkey"
+JWT_EXPIRES_IN = "1d"

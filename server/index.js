@@ -14,6 +14,8 @@ const { getBudgetsList, createBudget, deleteBudget } = require("./db/helpers/man
 const { addEntry, getEntry, getEntriesForWeek } = require("./db/helpers/entries");
 const { getCategories } = require("./db/helpers/categories");
 const multer = require("multer");
+const tesseract = require("node-tesseract-ocr"); // Dodaj nową bibliotekę
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -23,12 +25,11 @@ app.get("/categories", getCategories);
 app.post("/register", register);
 app.post("/login", login);
 
-// Private routes (Remember to add auththentication middleware)
+// Private routes (Remember to add authentication middleware)
 
 app.get("/budgets", getBudgetsList);
 app.post("/budgets", createBudget);
 app.delete("/budgets", deleteBudget);
-
 
 const storage = multer.diskStorage({
     destination: "uploads/", // Katalog docelowy
@@ -44,9 +45,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const ReadText = require("text-from-image");
 const sharp = require("sharp");
-const sharpImage = (name, targetWidth = 500) => {
+const sharpImage = async (name, targetWidth = 220) => {
     // Odczytaj wejściowy plik i przeskaluj go
     sharp(`uploads/${name}`)
         .resize(targetWidth) // Przeskaluj do szerokości 500 pikseli, zachowując proporcje
@@ -59,42 +59,56 @@ const sharpImage = (name, targetWidth = 500) => {
         });
 };
 
-const read = async (name) =>
-    ReadText(`uploads/res${name}`)
-        .then((text) => {
-            return text;
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+const Tesseract = require('tesseract.js');
+
+async function recognizeTextFromImage(imagePath) {
+  const { data: { text } } = await Tesseract.recognize(
+    `uploads/res${imagePath}`,
+    'eng', // Język rozpoznawania
+  );
+  return text;
+}
+
+// Wywołanie funkcji
+
 
 app.post("/image", upload.single("file"), async (req, res) => {
-    // Sprawdź, czy nazwa pliku jest dostępna w zmiennej req.uploadedFileName
-    if (req.uploadedFileName) {
-        console.log("Plik został pomyślnie przesłany:", req.uploadedFileName);
+    try {
+        // Sprawdź, czy nazwa pliku jest dostępna w zmiennej req.uploadedFileName
+        if (req.uploadedFileName) {
+            console.log("Plik został pomyślnie przesłany:", req.uploadedFileName);
 
-        sharpImage(req.uploadedFileName);
-        const text = await read(req.uploadedFileName);
-        const lines = text.split("\n");
+            await sharpImage(req.uploadedFileName);
 
-        // Znajdź linię zawierającą słowo "SUMA"
-        const sumaLine = lines.find((line) => line.includes("SUMA"));
+            console.log("Przeskalowano")
 
-        if (sumaLine) {
-            const amount = sumaLine.split(" ")[sumaLine.split(" ").length - 1];
-            res.status(200).send({
-                name: req.uploadedFileName,
-                value: amount,
-            });
-            return;
+            const text = await recognizeTextFromImage(req.uploadedFileName);
+            console.log(text);
+            const lines = text.split("\n");
+
+            // Znajdź linię zawierającą słowo "SUMA"
+            const sumaLine = lines.find((line) => line.includes("SUMA"));
+
+            if (sumaLine) {
+                const amount = sumaLine.split(" ")[sumaLine.split(" ").length - 1];
+                res.send({
+                    name: req.uploadedFileName,
+                    value: amount,
+                });
+                return;
+            }
         }
+        res.sendStatus(400);
+    } catch (error) {
+        console.error("Błąd podczas przetwarzania obrazu:", error);
+        res.sendStatus(500); // lub inny kod błędu HTTP, który uznasz za odpowiedni
     }
-    res.status(400).send("Błąd: Plik nie został przesłany.");
 });
 
 app.post("/entries", addEntry);
 app.get("/entries", getEntry);
 app.get("/entries-weekly", getEntriesForWeek);
+
 app.listen(config.express.port, () => {
     console.log(`Server running on port ${config.express.port}`);
 });

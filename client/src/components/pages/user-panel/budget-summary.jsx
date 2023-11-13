@@ -13,6 +13,13 @@ import AddEntry from "./addEntry";
 
 const BudgetSummary = ({ budgetid }) => {
     const [date, setDate] = useState(new Date());
+
+    const [refresh, setRefresh] = useState(false);
+
+    const refreshState = () => {
+        setRefresh(!refresh)
+    }
+
     const { startOfWeek, endOfWeek } = getStartAndEndOfWeek(date);
     const getEntriesWeeklyQuery = useQuery(
         "entries",
@@ -79,21 +86,30 @@ const BudgetSummary = ({ budgetid }) => {
     if (getEntriesWeeklyQuery.isError)
         return (
             <>
-                <h1>Błąd podczas generowania formularza!</h1>
+                            <Typography variant="h2" sx={{
+                fontSize: "1.5rem",
+                margin: "0.75rem 0"
+            }}>Błąd podczas generowania formularza!</Typography>
             </>
         );
 
     if (getEntriesWeeklyQuery.isLoading)
         return (
             <>
-                <h1>Ładowanie...</h1>
+                            <Typography variant="h2" sx={{
+                fontSize: "1.5rem",
+                margin: "0.75rem 0"
+            }}>Ładowanie...</Typography>
             </>
         );
 
     if (!getEntriesWeeklyQuery.data)
         return (
             <>
-                <h1>Ładowanie...</h1>
+                            <Typography variant="h2" sx={{
+                fontSize: "1.5rem",
+                margin: "0.75rem 0"
+            }}>Ładowanie...</Typography>
             </>
         );
 
@@ -155,7 +171,7 @@ const BudgetSummary = ({ budgetid }) => {
 
     return (
         <>
-            <AddEntry budgetid={budgetid} />
+            <AddEntry budgetid={budgetid} refresh={refreshState}/>
             <TransactionList entries={entriesWeeklyRaw} />
             <Container
                 sx={{

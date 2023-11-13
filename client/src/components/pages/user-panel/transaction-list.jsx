@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { List, ListItem, ListItemText, Divider, Typography, Box } from '@mui/material';
+import config from '../../../utils/config';
 
 const EntriesList = ({ entries }) => {
     return (
@@ -19,7 +20,7 @@ const EntriesList = ({ entries }) => {
                                         {`(${entry.category.name})`}
                                     </Typography>
                                 </Box>}
-                            secondary={<Box sx={{
+                            secondary={<Box><Box sx={{
                                 display: "flex", justifyContent: "space-between"
                             }}>
                                 <Typography>
@@ -29,7 +30,13 @@ const EntriesList = ({ entries }) => {
                                     color: entry.category.isIncome ? "green" : "crimson"
                                 }}>
                                     {`${(entry.category.isIncome ? 1 : -1) * entry.value}`}&nbsp;zł
-                                </Typography></Box>}
+                                </Typography></Box>
+                                <br />
+                                {entry.image ? <img style={{
+                                    display: "block",
+                                    margin: "0 0 0 auto",
+                                }} src={`${config.backend}/uploads/res${entry.image}`} /> : ""}
+                            </Box>}
                         />
                     </ListItem>
                     <Divider />

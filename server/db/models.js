@@ -26,7 +26,8 @@ const Entry = mongoose.model(
         value: Number,
         who: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         date: { type: Date, default: Date.now },
-        budget: { type: mongoose.Schema.Types.ObjectId, ref: "Budget" }
+        budget: { type: mongoose.Schema.Types.ObjectId, ref: "Budget" },
+        image: { type: String },
     })
 );
 

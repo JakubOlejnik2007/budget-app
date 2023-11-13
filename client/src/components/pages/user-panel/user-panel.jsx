@@ -37,7 +37,10 @@ const UserPanel = () => {
             </Typography>
             
             <Container component="form" onSubmit={onSubmit}>
-                <h2>Dodaj nowy budżet!</h2>
+                <Typography variant="h2" sx={{
+                fontSize: "1.5rem",
+                margin: "0.75rem 0"
+            }}>Dodaj nowy budżet!</Typography>
                 <FormInput type="text" name="name" id="name" label="Nazwa" value={budgetName} onChange={(e)=>setBudgetName(e.target.value)} />
                 <Button
                         type="submit"
@@ -55,7 +58,10 @@ const UserPanel = () => {
                         Dodaj
                     </Button>
             </Container>
-            <h2>Przeglądaj szczegóły swoich budżetów!</h2>
+            <Typography variant="h2" sx={{
+                fontSize: "1.5rem",
+                margin: "0.75rem 0"
+            }}>Przeglądaj szczegóły swoich budżetów!</Typography>
             <DropdownMenu />
         </>
     );

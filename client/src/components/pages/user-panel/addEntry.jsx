@@ -11,9 +11,9 @@ import { AuthData } from "../../../auth/AuthWrapper";
 import axios from 'axios';
 import config from "../../../utils/config"
 
-const AddEntry = ({ budgetid }) => {
+const AddEntry = ({ budgetid, refresh }) => {
     const [show, setShow] = useState(true);
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState("");
     const [entryValues, setEntryValues] = useState({
         categoryid: "",
         description: "",
@@ -38,10 +38,19 @@ const AddEntry = ({ budgetid }) => {
                 });
                 setImage(response.data.name)
                 setEntryValues(prevState => {
-                    return {...prevState, value: parseInt(response.data.value)}
+                    return {...prevState, value: parseFloat(response.data.value.replace(",", "."))}
                 })
+
+                callSuccess("Udało się przesłać plik!")
+                refresh();
                 console.log('Plik został pomyślnie przesłany na serwer:', response.data);
             } catch (error) {
+
+                switch (error.response.status) {
+
+                    default: callError("Wystąpił błąd podczas przesyłania pliku!")
+                }
+
                 console.error('Błąd podczas przesyłania pliku na serwer:', error);
             }
         }
@@ -73,7 +82,7 @@ const AddEntry = ({ budgetid }) => {
         console.log(entryValues)
 
         try {
-            await addEntry(user.AuthToken, user.id, budgetid, entryValues.categoryid, entryValues.description, entryValues.value);
+            await addEntry(user.AuthToken, user.id, budgetid, entryValues.categoryid, entryValues.description, entryValues.value, image);
             handleReset()
             callSuccess("Wpis został dodany!")
         } catch (error) {
@@ -100,14 +109,20 @@ const AddEntry = ({ budgetid }) => {
     if (getCategoriesQuery.isError)
         return (
             <>
-                <h1>Błąd podczas generowania formularza!</h1>
+                            <Typography variant="h2" sx={{
+                fontSize: "1.5rem",
+                margin: "0.75rem 0"
+            }}>Błąd podczas generowania formularza!</Typography>
             </>
         );
 
     if (getCategoriesQuery.isLoading)
         return (
             <>
-                <h1>Ładowanie...</h1>
+                            <Typography variant="h2" sx={{
+                fontSize: "1.5rem",
+                margin: "0.75rem 0"
+            }}>Ładowanie...</Typography>
             </>
         );
 
